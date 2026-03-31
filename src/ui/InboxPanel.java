@@ -7,6 +7,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import dao.MessageDAO;
+
 public class InboxPanel extends JPanel {
 
     private JTable emailTable;
@@ -38,61 +40,16 @@ public class InboxPanel extends JPanel {
         header.setFont(new Font("Arial", Font.BOLD, 14));
         header.setBorder(BorderFactory.createEmptyBorder());
 
-        // Add some dummy data for testing
-        tableModel.addRow(new Object[]{"David", "Weekly Report", "2024-06-04"});
-        tableModel.addRow(new Object[]{"Emma", "Team Sync", "2024-06-05"});
-        tableModel.addRow(new Object[]{"Frank", "Code Review", "2024-06-06"});
-        tableModel.addRow(new Object[]{"Grace", "Client Meeting", "2024-06-07"});
-        tableModel.addRow(new Object[]{"Hannah", "Budget Discussion", "2024-06-08"});
-        tableModel.addRow(new Object[]{"Ian", "Design Feedback", "2024-06-09"});
-        tableModel.addRow(new Object[]{"Jack", "Sprint Planning", "2024-06-10"});
-        tableModel.addRow(new Object[]{"Karen", "HR Update", "2024-06-11"});
-        tableModel.addRow(new Object[]{"Leo", "Deployment Notice", "2024-06-12"});
-        tableModel.addRow(new Object[]{"Mia", "Training Session", "2024-06-13"});
+        MessageDAO messageDAO = new MessageDAO(); // Create instance of MessageDAO to retrieve messages
+        List<Message> inboxMessages = messageDAO.getInboxMessages(1); // Retrieve inbox messages for user with ID 1 (replace with actual user ID)
 
-        tableModel.addRow(new Object[]{"Nina", "Bug Fixes", "2024-06-14"});
-        tableModel.addRow(new Object[]{"Oscar", "Performance Review", "2024-06-15"});
-        tableModel.addRow(new Object[]{"Paul", "New Feature", "2024-06-16"});
-        tableModel.addRow(new Object[]{"Quinn", "System Update", "2024-06-17"});
-        tableModel.addRow(new Object[]{"Ryan", "Database Migration", "2024-06-18"});
-        tableModel.addRow(new Object[]{"Sophia", "Security Check", "2024-06-19"});
-        tableModel.addRow(new Object[]{"Tom", "Integration Testing", "2024-06-20"});
-        tableModel.addRow(new Object[]{"Uma", "UI Improvements", "2024-06-21"});
-        tableModel.addRow(new Object[]{"Victor", "Backend Refactor", "2024-06-22"});
-        tableModel.addRow(new Object[]{"Wendy", "API Review", "2024-06-23"});
-
-        tableModel.addRow(new Object[]{"Xavier", "Documentation Update", "2024-06-24"});
-        tableModel.addRow(new Object[]{"Yara", "Release Notes", "2024-06-25"});
-        tableModel.addRow(new Object[]{"Zane", "Hotfix Patch", "2024-06-26"});
-        tableModel.addRow(new Object[]{"Aarav", "Team Lunch", "2024-06-27"});
-        tableModel.addRow(new Object[]{"Isha", "Client Feedback", "2024-06-28"});
-        tableModel.addRow(new Object[]{"Rohan", "Project Kickoff", "2024-06-29"});
-        tableModel.addRow(new Object[]{"Neha", "Design Review", "2024-06-30"});
-        tableModel.addRow(new Object[]{"Arjun", "Bug Triage", "2024-07-01"});
-        tableModel.addRow(new Object[]{"Pooja", "Feature Discussion", "2024-07-02"});
-        tableModel.addRow(new Object[]{"Karan", "System Testing", "2024-07-03"});
-
-        tableModel.addRow(new Object[]{"Meera", "Weekly Sync", "2024-07-04"});
-        tableModel.addRow(new Object[]{"Rahul", "Client Call", "2024-07-05"});
-        tableModel.addRow(new Object[]{"Sneha", "UI Fixes", "2024-07-06"});
-        tableModel.addRow(new Object[]{"Amit", "Backend Update", "2024-07-07"});
-        tableModel.addRow(new Object[]{"Divya", "Team Meeting", "2024-07-08"});
-        tableModel.addRow(new Object[]{"Vikram", "Performance Tuning", "2024-07-09"});
-        tableModel.addRow(new Object[]{"Anjali", "Design Sprint", "2024-07-10"});
-        tableModel.addRow(new Object[]{"Manish", "Security Audit", "2024-07-11"});
-        tableModel.addRow(new Object[]{"Kavya", "Project Demo", "2024-07-12"});
-        tableModel.addRow(new Object[]{"Suresh", "Code Merge", "2024-07-13"});
-
-        tableModel.addRow(new Object[]{"Ritika", "Bug Report", "2024-07-14"});
-        tableModel.addRow(new Object[]{"Deepak", "Feature Testing", "2024-07-15"});
-        tableModel.addRow(new Object[]{"Priya", "Release Planning", "2024-07-16"});
-        tableModel.addRow(new Object[]{"Nikhil", "Deployment Check", "2024-07-17"});
-        tableModel.addRow(new Object[]{"Swati", "User Feedback", "2024-07-18"});
-        tableModel.addRow(new Object[]{"Gaurav", "Server Maintenance", "2024-07-19"});
-        tableModel.addRow(new Object[]{"Tanya", "Team Discussion", "2024-07-20"});
-        tableModel.addRow(new Object[]{"Harsh", "UI Testing", "2024-07-21"});
-        tableModel.addRow(new Object[]{"Simran", "API Integration", "2024-07-22"});
-        tableModel.addRow(new Object[]{"Varun", "Final Review", "2024-07-23"});
+        for(Message message : inboxMessages) { // Loop through retrieved messages and add them to the table model
+            tableModel.addRow(new Object[]{
+                message.getSenderID(), // Placeholder for sender name, replace with actual sender name retrieval
+                message.getSubject(),
+                message.getTimestamp().toLocalDate().toString() // Format timestamp to show only date
+            });
+        }
 
         emailTable.setRowHeight(45); // Set row height for better appearance
 
