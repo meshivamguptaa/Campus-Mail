@@ -11,9 +11,10 @@ public class DBConnection{
     private static final String URL = "jdbc:mysql://localhost:3306/campus_mail_client";   // Database URL, including the database name (campus_mail_client)
     private static final String USER = "root";                         // Database username
     private static final String PASSWORD = "password";                 // Database password
-}
+
 
 // Method to establish and return a connection to the database
 public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD); // Establish and return a connection to the database   
+}
 }
