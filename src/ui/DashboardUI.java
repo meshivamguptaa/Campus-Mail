@@ -109,7 +109,7 @@ public class DashboardUI extends JPanel {
         draftBtn.addActionListener(e -> {
             // Clear existing content and add DraftPanel
             content.removeAll();
-            content.add(new DraftPanel(), BorderLayout.CENTER);
+            content.add(new DraftPanel(content), BorderLayout.CENTER);
             content.revalidate();
             repaint();
         });

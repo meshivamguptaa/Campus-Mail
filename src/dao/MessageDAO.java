@@ -100,6 +100,35 @@ public List<Message> getSentMessages(int senderId) {
     return sentMessages;
 }
 
+public List<Message> getDraftMessages(int senderId) {
+    String sql = "SELECT * FROM messages WHERE sender_id = ? AND status = 'DRAFT'";
+    List<Message> draftMessages = new ArrayList<>();
+
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, senderId);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            Message message = new Message(
+                rs.getInt("id"),
+                rs.getInt("sender_id"),
+                rs.getInt("recipient_id"),
+                rs.getString("subject"),
+                rs.getString("body"),
+                rs.getString("status"),
+                rs.getTimestamp("timestamp").toLocalDateTime()
+            );
+            draftMessages.add(message);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return draftMessages;
+}
+
 public List<Message> getInboxMessages(int recipientId){
     // Code to retrieve all messages for a specific recipient from the database or file
     // Implementation details would go here

@@ -5,13 +5,25 @@ import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import java.util.List;
+import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+
+import org.w3c.dom.events.MouseEvent;
+
+import dao.MessageDAO;
+import model.Message;
 
 public class DraftPanel extends JPanel {
 
     private JTable draftTable;
     private DefaultTableModel tableModel;
+    private JPanel content;
 
-    public DraftPanel() {
+    public DraftPanel(JPanel content) {
+        this.content = content;
         setLayout(new BorderLayout());
 
         JLabel titleLabel = new JLabel(" Drafts", SwingConstants.LEFT);
@@ -21,7 +33,7 @@ public class DraftPanel extends JPanel {
 
         // Table model with columns: Recipient, Subject, Date
         tableModel = new DefaultTableModel(
-             new Object[]{"Recipient", "Subject", "Date"}, 0
+             new Object[]{"ID", "Recipient", "Subject", "Date"}, 0
             ) {
          public boolean isCellEditable(int row, int column) {
             return false;
@@ -37,11 +49,47 @@ public class DraftPanel extends JPanel {
         header.setBorder(BorderFactory.createEmptyBorder());
 
         
+        //Retrieve draft messages from database and populate table
+        MessageDAO messageDAO = new MessageDAO();
+        List<Message> draftMessages = messageDAO.getDraftMessages(1); // Replace with actual user ID
+        for (Message message : draftMessages) {
+            tableModel.addRow(new Object[]{
+            message.getID(),
+            message.getRecipientID(),
+            message.getSubject(),
+            message.getTimestamp().toLocalDate()
+        });
+        }
 
-        // Add some dummy data for testing
-        tableModel.addRow(new Object[]{"Shivam", "Meeting Tomorrow", "2024-06-01"});
-        tableModel.addRow(new Object[]{"Bob", "Project Update", "2024-06-02"});
-        tableModel.addRow(new Object[]{"Charlie", "Lunch Plans", "2024-06-03"});
+        draftTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+
+                    int selectedRow = draftTable.getSelectedRow();
+
+                        if (selectedRow != -1) {
+
+                             int messageId = (int) tableModel.getValueAt(selectedRow, 0);
+
+                             MessageDAO dao = new MessageDAO();
+                             Message message = dao.getMessageById(messageId);
+
+                                 if (message != null) {
+
+                                    MessageView view = new MessageView();
+                                    view.setMessage(message);
+
+                                    content.removeAll();
+                                    content.add(view, BorderLayout.CENTER);
+                                    content.revalidate();
+                                    content.repaint();
+                                 }
+                     }
+            }
+        }
+});
+
 
         draftTable.setRowHeight(45); // Set row height for better appearance
 
