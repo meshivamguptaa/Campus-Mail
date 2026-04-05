@@ -91,7 +91,7 @@ public class DashboardUI extends JPanel {
         sentBtn.addActionListener(e -> {
             // Clear existing content and add SentPanel
             content.removeAll();
-            content.add(new SentPanel(), BorderLayout.CENTER);
+            content.add(new SentPanel(content), BorderLayout.CENTER);
             content.revalidate();
             repaint();
         });

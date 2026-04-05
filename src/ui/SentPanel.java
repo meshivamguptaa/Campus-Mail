@@ -4,17 +4,26 @@ import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
 
 import org.w3c.dom.events.MouseEvent;
 
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.ListSelectionModel;
+import model.Message;
 import dao.MessageDAO;
 
 public class SentPanel extends JPanel {
 
     private JTable sentTable;
     private DefaultTableModel tableModel;
+    private JPanel content;
 
-    public SentPanel() {
+    public SentPanel(JPanel content) {
+        this.content = content;
         setLayout(new BorderLayout());
 
         JLabel titleLabel = new JLabel(" Sent", SwingConstants.LEFT);
@@ -46,8 +55,8 @@ public class SentPanel extends JPanel {
 
         for (Message message : sentMessages) {
             tableModel.addRow(new Object[]{
-            message.getId(),
-            message.getReceiverId(),
+            message.getID(),
+            message.getRecipientID(),
             message.getSubject(),
             message.getTimestamp().toLocalDate()
     });
@@ -82,12 +91,6 @@ public class SentPanel extends JPanel {
             }
         }
 });
-        // Add some dummy data for testing
-        tableModel.addRow(new Object[]{"Shivam", "Meeting Tomorrow", "2024-06-01"});
-        tableModel.addRow(new Object[]{"Bob", "Project Update", "2024-06-02"});
-        tableModel.addRow(new Object[]{"Charlie", "Lunch Plans", "2024-06-03"});
-
-        sentTable.setRowHeight(45); // Set row height for better appearance
 
         // Make table non-editable
         
