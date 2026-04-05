@@ -36,6 +36,8 @@ public class DraftPanel extends JPanel {
         header.setFont(new Font("Arial", Font.BOLD, 14));
         header.setBorder(BorderFactory.createEmptyBorder());
 
+        
+
         // Add some dummy data for testing
         tableModel.addRow(new Object[]{"Shivam", "Meeting Tomorrow", "2024-06-01"});
         tableModel.addRow(new Object[]{"Bob", "Project Update", "2024-06-02"});

@@ -37,8 +37,8 @@ public class MessageView extends JPanel {
     }
 
     public void setMessage(Message message) {
-        senderLabel.setText("From: " + message.getSenderId());
-        recipientLabel.setText("To: " + message.getReceiverId());
+        senderLabel.setText("From: " + message.getSenderID());
+        recipientLabel.setText("To: " + message.getRecipientID());
         subjectLabel.setText("Subject: " + message.getSubject());
         bodyTextArea.setText(message.getBody());
         timestampLabel.setText("Received on: " + message.getTimestamp().toLocalDate());

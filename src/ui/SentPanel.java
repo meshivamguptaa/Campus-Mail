@@ -5,6 +5,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
+import org.w3c.dom.events.MouseEvent;
+
+import dao.MessageDAO;
+
 public class SentPanel extends JPanel {
 
     private JTable sentTable;
@@ -20,7 +24,7 @@ public class SentPanel extends JPanel {
 
         // Table model with columns: Recipient, Subject, Date
         tableModel = new DefaultTableModel(
-             new Object[]{"Recipient", "Subject", "Date"}, 0
+             new Object[]{"ID", "Recipient", "Subject", "Date"}, 0
             ) {
          public boolean isCellEditable(int row, int column) {
             return false;
@@ -36,6 +40,48 @@ public class SentPanel extends JPanel {
         header.setFont(new Font("Arial", Font.BOLD, 14));
         header.setBorder(BorderFactory.createEmptyBorder());
 
+        // Retrieve sent messages from database and populate table
+        MessageDAO messageDAO = new MessageDAO();
+        List<Message> sentMessages = messageDAO.getSentMessages(1);
+
+        for (Message message : sentMessages) {
+            tableModel.addRow(new Object[]{
+            message.getId(),
+            message.getReceiverId(),
+            message.getSubject(),
+            message.getTimestamp().toLocalDate()
+    });
+}
+
+        sentTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if (e.getClickCount() == 2) {
+
+                    int selectedRow = sentTable.getSelectedRow();
+
+                        if (selectedRow != -1) {
+
+                             int messageId = (int) tableModel.getValueAt(selectedRow, 0);
+
+                             MessageDAO dao = new MessageDAO();
+                             Message message = dao.getMessageById(messageId);
+
+                                 if (message != null) {
+
+                                    MessageView view = new MessageView();
+                                    view.setMessage(message);
+
+                                    content.removeAll();
+                                    content.add(view, BorderLayout.CENTER);
+                                    content.revalidate();
+                                    content.repaint();
+                                 }
+                     }
+            }
+        }
+});
         // Add some dummy data for testing
         tableModel.addRow(new Object[]{"Shivam", "Meeting Tomorrow", "2024-06-01"});
         tableModel.addRow(new Object[]{"Bob", "Project Update", "2024-06-02"});

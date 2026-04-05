@@ -8,9 +8,9 @@ import java.sql.SQLException;
 
 // DBConnection class to manage database connections
 public class DBConnection{
-    private static final String URL = "jdbc:mysql://localhost:3306/campus_mail_client";   // Database URL, including the database name (campus_mail_client)
+    private static final String URL = "jdbc:mysql://localhost:3306/maildb";   // Database URL, including the database name (campus_mail_client)
     private static final String USER = "root";                         // Database username
-    private static final String PASSWORD = "password";                 // Database password
+    private static final String PASSWORD = "2290";                 // Database password
 
 
 // Method to establish and return a connection to the database

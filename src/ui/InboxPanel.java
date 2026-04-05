@@ -6,15 +6,25 @@ import java.awt.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
+import java.util.ArrayList;
 
+import model.Message;
 import dao.MessageDAO;
+import ui.DashboardUI;
+import ui.MessageView;
 
 public class InboxPanel extends JPanel {
 
     private JTable emailTable;
     private DefaultTableModel tableModel;
+    private JPanel content;
 
-    public InboxPanel() {
+    public InboxPanel(JPanel content) {
+        this.content = content;
         setLayout(new BorderLayout());
 
         JLabel titleLabel = new JLabel(" Inbox", SwingConstants.LEFT);
@@ -25,7 +35,7 @@ public class InboxPanel extends JPanel {
 
         // Table model with columns: Sender, Subject, Date
         tableModel = new DefaultTableModel(
-             new Object[]{"Sender", "Subject", "Date"}, 0
+             new Object[]{"ID","Sender", "Subject", "Date"}, 0
             ) {
          public boolean isCellEditable(int row, int column) {        // Make table cells non-editable
             return false;
@@ -45,12 +55,40 @@ public class InboxPanel extends JPanel {
 
         for(Message message : inboxMessages) { // Loop through retrieved messages and add them to the table model
             tableModel.addRow(new Object[]{
+                message.getID(), 
                 message.getSenderID(), // Placeholder for sender name, replace with actual sender name retrieval
                 message.getSubject(),
-                message.getTimestamp().toLocalDate().toString() // Format timestamp to show only date
+                message.getTimestamp().toLocalDate() // Format timestamp to show only date
             });
         }
+        emailTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Check for double-click
+                    int selectedRow = emailTable.getSelectedRow(); // Get selected row index
+                    if (selectedRow != -1) { // Ensure a row is selected
+                        int messageId = (int) tableModel.getValueAt(selectedRow, 0); // Get message ID from the first column
+                        MessageDAO messageDAO = new MessageDAO(); // Create instance of MessageDAO to retrieve message details
+                        Message message = messageDAO.getMessageById(messageId); // Retrieve message details using the message ID
 
+                        // Open a new window or dialog to display the full email content using the message ID
+                        if(message != null) {
+                            MessageView messageView = new MessageView(); // Create instance of MessageView to display message details
+                            messageView.setMessage(message); // Pass the message object to the view to display its details
+                            
+                            // Clear existing content and show the message view in the main panel
+                            content.removeAll(); // Clear existing content in the main panel
+                            content.add(messageView, BorderLayout.CENTER); // Add the message view to the main panel
+                            content.revalidate(); // Refresh the main panel to show the new content
+                            content.repaint(); // Repaint the main panel to ensure the new content is displayed properly
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Failed to retrieve message details.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                      }
+                    }
+                }
+            }
+        );
         emailTable.setRowHeight(45); // Set row height for better appearance
 
         

@@ -23,6 +23,15 @@ public class DashboardUI extends JPanel {
         sidebar.add(Box.createVerticalStrut(30)); // Add space between logo and buttons
         sidebar.setBorder(BorderFactory.createEmptyBorder(20, 15, 20, 15));  // Add padding around sidebar
 
+        // Content area
+         // Content area
+        JPanel content = new JPanel(new BorderLayout());
+        content.setBackground(Color.WHITE);
+
+        content.add(new JLabel("Mail Content Area"));
+        content.add(new InboxPanel(content), BorderLayout.CENTER); // Add inbox panel to content area
+    
+
         // Compose Button
        JButton compose = new JButton("Compose"); // Create compose button
        compose.setFont(new Font("Arial", Font.BOLD, 16)); // Set font for button
@@ -62,12 +71,10 @@ public class DashboardUI extends JPanel {
 
         inbox.addActionListener(e -> {
             // Clear existing content and add InboxPanel
-            removeAll();
-            add(sidebar, BorderLayout.WEST);
-            add(new TopBarPanel(), BorderLayout.NORTH);
-            add(new InboxPanel(), BorderLayout.CENTER);
-            revalidate();
-            repaint();
+            content.removeAll();
+            content.add(new InboxPanel(content), BorderLayout.CENTER);
+            content.revalidate();
+            content.repaint();
         });
 
         // Sent button
@@ -83,12 +90,9 @@ public class DashboardUI extends JPanel {
 
         sentBtn.addActionListener(e -> {
             // Clear existing content and add SentPanel
-            removeAll();
-            add(new TopBarPanel(), BorderLayout.NORTH);
-            add(new InboxPanel(), BorderLayout.CENTER);
-            add(sidebar, BorderLayout.WEST);
-            add(new SentPanel(), BorderLayout.CENTER);
-            revalidate();
+            content.removeAll();
+            content.add(new SentPanel(), BorderLayout.CENTER);
+            content.revalidate();
             repaint();
         });
 
@@ -104,12 +108,9 @@ public class DashboardUI extends JPanel {
         
         draftBtn.addActionListener(e -> {
             // Clear existing content and add DraftPanel
-            removeAll();
-            add(new TopBarPanel(), BorderLayout.NORTH);
-            add(new InboxPanel(), BorderLayout.CENTER);
-            add(sidebar, BorderLayout.WEST);
-            add(new DraftPanel(), BorderLayout.CENTER);
-            revalidate();
+            content.removeAll();
+            content.add(new DraftPanel(), BorderLayout.CENTER);
+            content.revalidate();
             repaint();
         });
 
@@ -119,15 +120,10 @@ public class DashboardUI extends JPanel {
         sidebar.add(Box.createVerticalStrut(15));
         //sidebar.setBackground(new Color(248,249,250));
 
-        // Content area
-        JPanel content = new JPanel();
-        content.setBackground(Color.WHITE);
-
-        content.add(new JLabel("Mail Content Area"));
-
+       
         add(sidebar, BorderLayout.WEST);
         add(content, BorderLayout.CENTER);
-        add(new InboxPanel(), BorderLayout.CENTER); // Add inbox panel to content area
+        // Add inbox panel to content area
         add(new TopBarPanel(), BorderLayout.NORTH); // Add top bar panel
     }
 }

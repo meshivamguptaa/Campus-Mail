@@ -15,18 +15,19 @@ public class Message {
     private String status; // Status of the message (DRAFT, SENT, INBOX)
 
     // Constructor to initialize message properties
-    public Message(int id, int senderId, int recipientId, String subject, String body, LocalDateTime timestamp) {
+    public Message(int id, int senderId, int recipientId, String subject, String body, String status, LocalDateTime timestamp) {
         this.id = id;                  // Set ID of the message
         this.senderId = senderId;       // Set senderId of the message
         this.recipientId = recipientId;  // Set recipient of the message
         this.subject = subject;          // Set subject of the message
         this.body = body;               // Set body of the message
+        this.status = status; // Set status of the message
         this.timestamp = timestamp;    // Set timestamp of the message
-        this.status = "INBOX"; // Default status is INBOX, can be updated to DRAFT or SENT as needed
+        
     }
 
     // Getter methods for message properties
-    public int getId() {
+    public int getID() {
         return id;                          // Return the ID of the message
     }
 
