@@ -14,7 +14,7 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        add(new DashboardUI());
+        add(new ComposeMailUI());
         
         setVisible(true);
     }
