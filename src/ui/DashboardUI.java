@@ -48,7 +48,7 @@ public class DashboardUI extends JPanel {
        compose.addActionListener(e -> {
            // Clear existing content and add ComposeMailUI
            content.removeAll();
-           content.add(new ComposeMailUI(), BorderLayout.CENTER);
+           content.add(new ComposeMailUI(content), BorderLayout.CENTER);
            revalidate();
            repaint();
          });

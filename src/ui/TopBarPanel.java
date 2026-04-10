@@ -2,10 +2,13 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
+import ui.DashboardUI;
 
 public class TopBarPanel extends JPanel {
 
-    public TopBarPanel() {
+    private JPanel content;
+    public TopBarPanel(JPanel content) {
+        this.content = content;
 
         setLayout(new BorderLayout(10,10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -28,6 +31,15 @@ public class TopBarPanel extends JPanel {
         JButton refreshBtn = new JButton("Refresh");
         JButton profileBtn = new JButton("User");
 
+        refreshBtn.addActionListener(e -> {
+            // Implement refresh functionality here
+            content.removeAll();
+            content.add(new InboxPanel(content), BorderLayout.CENTER);
+            content.revalidate();
+            content.repaint();
+            // For now, just show a message
+            JOptionPane.showMessageDialog(this, "Refresh clicked!");
+        });
         rightPanel.add(refreshBtn);
         rightPanel.add(profileBtn);
 
