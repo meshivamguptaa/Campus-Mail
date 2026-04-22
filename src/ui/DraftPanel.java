@@ -32,7 +32,7 @@ public class DraftPanel extends JPanel {
 
         // Table model with columns: Recipient, Subject, Date
         tableModel = new DefaultTableModel(
-             new Object[]{"ID", "Recipient", "Subject", "Date"}, 0
+             new Object[]{"Recipient", "Subject", "Date"}, 0
             ) {
          public boolean isCellEditable(int row, int column) {
             return false;
@@ -53,8 +53,7 @@ public class DraftPanel extends JPanel {
         List<Message> draftMessages = messageDAO.getDraftMessages(SessionManager.getCurrentUser().getId()); // Replace with actual user ID
         for (Message message : draftMessages) {
             tableModel.addRow(new Object[]{
-            message.getId(),
-            message.getRecipientID(),
+            message.getRecipientEmail(),
             message.getSubject(),
             message.getTimestamp().toLocalDate()
         });

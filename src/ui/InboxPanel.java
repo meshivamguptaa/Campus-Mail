@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import model.Message;
 import dao.MessageDAO;
+import dao.UserDAO;
 import ui.DashboardUI;
 import ui.MessageView;
 
@@ -38,13 +39,18 @@ public class InboxPanel extends JPanel {
 
         // Table model with columns: Sender, Subject, Date
         tableModel = new DefaultTableModel(
-             new Object[]{"ID","Sender", "Subject", "Date"}, 0
+             new Object[]{"ID", "Sender", "Subject", "Date"}, 0
             ) {
          public boolean isCellEditable(int row, int column) {        // Make table cells non-editable
             return false;
          }
         };
         emailTable = new JTable(tableModel);             // Create table with model
+
+        // Hide the ID column but keep it for reference when a row is clicked
+        emailTable.getColumnModel().getColumn(0).setMinWidth(0);
+        emailTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        emailTable.getColumnModel().getColumn(0).setWidth(0);
         emailTable.setFillsViewportHeight(true); // Make table fill the panel
 
         // Customize table header
@@ -56,14 +62,19 @@ public class InboxPanel extends JPanel {
         MessageDAO messageDAO = new MessageDAO(); // Create instance of MessageDAO to retrieve messages
         List<Message> inboxMessages = messageDAO.getInboxMessages(SessionManager.getCurrentUser().getId()); // Retrieve inbox messages for user with ID 1 (replace with actual user ID)
 
-        for(Message message : inboxMessages) { // Loop through retrieved messages and add them to the table model
-            tableModel.addRow(new Object[]{
-                message.getId(), 
-                message.getSenderID(), // Placeholder for sender name, replace with actual sender name retrieval
-                message.getSubject(),
-                message.getTimestamp().toLocalDate() // Format timestamp to show only date
-            });
-        }
+        UserDAO userDAO = new UserDAO();
+
+        for (Message message : inboxMessages) {
+
+         String senderEmail = userDAO.getUserById(message.getSenderID()).getEmail();
+
+        tableModel.addRow(new Object[]{
+        message.getId(),       // keep ID for click
+        senderEmail,           // show email
+        message.getSubject(),
+        message.getTimestamp().toLocalDate()
+    });
+}
         emailTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -99,8 +110,8 @@ public class InboxPanel extends JPanel {
 
         // Set column widths for better appearance
         emailTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-        emailTable.getColumnModel().getColumn(1).setPreferredWidth(300);
-        emailTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        emailTable.getColumnModel().getColumn(0).setPreferredWidth(300);
+        emailTable.getColumnModel().getColumn(0).setPreferredWidth(100);
 
         // Set selection mode to single selection
         emailTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

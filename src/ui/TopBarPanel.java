@@ -42,7 +42,7 @@ public class TopBarPanel extends JPanel {
             JPopupMenu menu = new JPopupMenu();
 
             // Show current user
-            JMenuItem userInfo = new JMenuItem("Logged in as: " + user.getEmailId());
+            JMenuItem userInfo = new JMenuItem("Logged in as: " + user.getEmail());
             userInfo.setEnabled(false);
 
             // Logout option
@@ -50,7 +50,7 @@ public class TopBarPanel extends JPanel {
 
             logoutItem.addActionListener(ev -> {
                 if (onLogout != null) {
-                    onLogout.run(); // 🔥 THIS triggers Dashboard logic
+                    onLogout.run(); //  THIS triggers Dashboard logic
                 }
             });
 

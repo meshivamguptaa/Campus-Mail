@@ -133,27 +133,31 @@ public List<Message> getDraftMessages(int senderId) {
 public List<Message> getInboxMessages(int recipientId){
     // Code to retrieve all messages for a specific recipient from the database or file
     // Implementation details would go here
-    String sql = "SELECT * FROM messages WHERE recipient_id = ? AND status = 'INBOX'"; // SQL query to retrieve inbox messages for a specific recipient
+    String sql =  "SELECT m.*, u.email AS sender_email FROM messages m JOIN users u ON m.sender_id = u.id WHERE m.recipient_id = ? AND m.status = 'INBOX'";  
             List<Message> inboxMessages = new ArrayList<>();
             try(Connection conn = DBConnection.getConnection();                // Establish a connection to the database
                 PreparedStatement stmt = conn. prepareStatement(sql)){       // Prepare the SQL statement for execution
                 stmt.setInt(1, recipientId);                          // Set the recipientId parameter in the SQL statement
                 ResultSet rs = stmt.executeQuery(); // Execute the SQL query to retrieve the inbox messages
                 while (rs.next()) {
-                    // Create Message objects from the result set and add them to a list or return them as needed
-                    Message message = new Message(
-                        rs.getInt("id"), 
-                        rs.getInt("sender_id"), 
-                        rs.getInt("recipient_id"), 
-                        rs.getString("subject"), 
-                        rs.getString("body"), 
-                        rs.getString("status"),
-                        rs.getTimestamp("timestamp").toLocalDateTime()
-                        
-                    );
-                    inboxMessages.add(message);
-                    // Add message to a list or return it as needed
-                }
+
+    String senderEmail = rs.getString("sender_email"); //  extra field
+
+    Message message = new Message(
+        rs.getInt("id"),
+        rs.getInt("sender_id"),
+        rs.getInt("recipient_id"),
+        rs.getString("subject"),
+        rs.getString("body"),
+        rs.getString("status"),
+        rs.getTimestamp("timestamp").toLocalDateTime()
+    );
+
+    //  temporarily attach email using a map OR simple list
+    inboxMessages.add(message);
+
+    // ALSO store email somewhere (see next step)
+}
                  // Return the list of inbox messages for the specified recipient
             } catch (SQLException e) {
                 e.printStackTrace(); // Handle any SQL exceptions that occur during the retrieval operation
