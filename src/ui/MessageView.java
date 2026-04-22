@@ -1,8 +1,12 @@
 package ui;
 
 import javax.swing.*;
+
+import dao.UserDAO;
+
 import java.awt.*;
 import model.Message;
+import model.User;
 
 public class MessageView extends JPanel {
 
@@ -37,8 +41,16 @@ public class MessageView extends JPanel {
     }
 
     public void setMessage(Message message) {
-        senderLabel.setText("From: " + message.getSenderID());
-        recipientLabel.setText("To: " + message.getRecipientID());
+       UserDAO userDAO = new UserDAO();
+
+        User sender = userDAO.getUserById(message.getSenderID());
+        User receiver = userDAO.getUserById(message.getRecipientID());
+
+        String senderEmail = (sender != null) ? sender.getEmail() : "Unknown";
+        String receiverEmail = (receiver != null) ? receiver.getEmail() : "Unknown";
+
+        senderLabel.setText("From: " + senderEmail);
+        recipientLabel.setText("To: " + receiverEmail);
         subjectLabel.setText("Subject: " + message.getSubject());
         bodyTextArea.setText(message.getBody());
         timestampLabel.setText("Received on: " + message.getTimestamp().toLocalDate());
