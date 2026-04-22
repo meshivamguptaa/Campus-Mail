@@ -8,6 +8,8 @@ import java.awt.*;
 import java.io.File;
 import java.time.LocalDateTime;  
 import core.SessionManager;
+import dao.UserDAO;
+import model.User;
     
 
 public class ComposeMailUI extends JPanel {
@@ -75,7 +77,17 @@ public class ComposeMailUI extends JPanel {
 
     try {
         int senderId = SessionManager.getCurrentUser().getId(); // Get the sender's user ID from the session manager to associate the sent message with the currently logged-in user
-        int receiverId = Integer.parseInt(toField.getText());
+        String email = toField.getText().trim();
+
+        UserDAO userDAO = new UserDAO();
+        User receiver = userDAO.getUserByEmail(email);
+
+        if (receiver == null) {
+             JOptionPane.showMessageDialog(this, "Receiver email not found");
+             return;
+        }
+
+        int receiverId = receiver.getId();
 
         String subject = subjectField.getText();
         String body = bodyArea.getText();
@@ -99,16 +111,17 @@ public class ComposeMailUI extends JPanel {
         attachmentLabel.setText("No file chosen");
         attachmentFile = null;
 
-        
-
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Invalid Receiver ID");
-    }
-    // After sending the message, navigate back to the SentPanel to show the sent message in the list
+        // After sending the message, navigate back to the SentPanel to show the sent message in the list
         content.removeAll();
         content.add(new SentPanel(content), BorderLayout.CENTER);
         content.revalidate();
         content.repaint();
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Something went wrong");
+    }
+    
 });
 
 
