@@ -76,6 +76,14 @@ public class RegisterUI extends JPanel {
 
         //  REGISTER LOGIC (same)
         registerBtn.addActionListener(e -> {
+
+            if (nameField.getText().isEmpty() ||
+                 emailField.getText().isEmpty() ||
+                passwordField.getPassword().length == 0) {
+
+                JOptionPane.showMessageDialog(this, "All fields are required");
+                return;
+            }
             AuthService service = new AuthService();
 
             boolean success = service.register(

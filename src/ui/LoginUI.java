@@ -68,6 +68,10 @@ public class LoginUI extends JPanel {
 
         //  LOGIN LOGIC (unchanged)
         loginBtn.addActionListener(e -> {
+            if (emailField.getText().isEmpty() || passwordField.getPassword().length == 0) {
+                 JOptionPane.showMessageDialog(this, "Please fill all fields");
+                 return;
+                }   
             AuthService service = new AuthService();
 
             User user = service.login(

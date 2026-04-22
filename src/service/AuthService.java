@@ -33,16 +33,22 @@ public class AuthService {
     // Method to log in a user, which retrieves the user by email and checks if the provided password matches the stored password
     public User login(String email, String password) {
 
+    // basic validation
+    if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
+        return null;
+    }
+
     User user = userDAO.getUserByEmail(email);
 
     if (user == null) {
-        return null; // no such user
+        return null;
     }
 
-    if (user.getPassword().equals(password)) {
-        return user; // success
+    //  IMPORTANT: check password
+    if (!user.getPassword().equals(password)) {
+        return null;
     }
 
-    return null; // wrong password
-    }
+    return user;
+}
 }   
