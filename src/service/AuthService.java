@@ -26,7 +26,7 @@ public class AuthService {
     User newUser = new User(name, email, password);
 
     userDAO.saveUser(newUser);
-
+    
     return true;
     }
 

@@ -1,4 +1,4 @@
-import dao.DBConnection;
+/*import dao.DBConnection;
 import java.sql.Connection;
 
 public class TestDB {
@@ -12,4 +12,4 @@ public class TestDB {
             e.printStackTrace();
         }
     }
-}
+}*/
