@@ -45,7 +45,7 @@ public class DraftPanel extends JPanel {
         draftTable.getColumnModel().getColumn(0).setMinWidth(0);
         draftTable.getColumnModel().getColumn(0).setMaxWidth(0);
         draftTable.getColumnModel().getColumn(0).setWidth(0);
-        
+
         draftTable.setFillsViewportHeight(true); // Make table fill the panel
 
         // Customize table header

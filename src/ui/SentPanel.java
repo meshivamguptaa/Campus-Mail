@@ -102,7 +102,7 @@ for (Message message : sentMessages) {
             }
         }
 });
-
+        sentTable.setRowHeight(45); // Set row height for better appearance
         // Make table non-editable
         
         // Set column widths for better appearance
