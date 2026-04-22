@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 
 import core.SessionManager;
 import dao.MessageDAO;
+import dao.UserDAO;
 import model.Message;
 
 public class DraftPanel extends JPanel {
@@ -32,13 +33,19 @@ public class DraftPanel extends JPanel {
 
         // Table model with columns: Recipient, Subject, Date
         tableModel = new DefaultTableModel(
-             new Object[]{"Recipient", "Subject", "Date"}, 0
+             new Object[]{"ID", "Recipient", "Subject", "Date"}, 0
             ) {
          public boolean isCellEditable(int row, int column) {
             return false;
          }
         };
         draftTable = new JTable(tableModel);
+
+        // Hide the ID column but keep it for reference when a row is clicked
+        draftTable.getColumnModel().getColumn(0).setMinWidth(0);
+        draftTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        draftTable.getColumnModel().getColumn(0).setWidth(0);
+        
         draftTable.setFillsViewportHeight(true); // Make table fill the panel
 
         // Customize table header
@@ -51,13 +58,21 @@ public class DraftPanel extends JPanel {
         //Retrieve draft messages from database and populate table
         MessageDAO messageDAO = new MessageDAO();
         List<Message> draftMessages = messageDAO.getDraftMessages(SessionManager.getCurrentUser().getId()); // Replace with actual user ID
+        UserDAO userDAO = new UserDAO();
+
         for (Message message : draftMessages) {
-            tableModel.addRow(new Object[]{
-            message.getRecipientEmail(),
-            message.getSubject(),
-            message.getTimestamp().toLocalDate()
-        });
-        }
+
+            String receiverEmail = userDAO
+             .getUserById(message.getRecipientID())
+             .getEmail();
+
+    tableModel.addRow(new Object[]{
+        message.getId(),        // keep ID (hidden)
+        receiverEmail,          // show email
+        message.getSubject(),
+        message.getTimestamp().toLocalDate()
+    });
+}
 
         draftTable.addMouseListener(new MouseAdapter() {
             @Override
