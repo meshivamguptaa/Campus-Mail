@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import model.Message;
 import dao.MessageDAO;
+import dao.UserDAO;
 
 public class SentPanel extends JPanel {
 
@@ -33,7 +34,7 @@ public class SentPanel extends JPanel {
 
         // Table model with columns: Recipient, Subject, Date
         tableModel = new DefaultTableModel(
-             new Object[]{"Recipient", "Subject", "Date"}, 0
+             new Object[]{"ID", "Recipient", "Subject", "Date"}, 0
             ) {
          public boolean isCellEditable(int row, int column) {
             return false;
@@ -41,6 +42,9 @@ public class SentPanel extends JPanel {
         };
 
         sentTable = new JTable(tableModel);
+        sentTable.getColumnModel().getColumn(0).setMinWidth(0);
+        sentTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        sentTable.getColumnModel().getColumn(0).setWidth(0);
         sentTable.setFillsViewportHeight(true); // Make table fill the panel
 
         // Customize table header
@@ -53,11 +57,19 @@ public class SentPanel extends JPanel {
         MessageDAO messageDAO = new MessageDAO();
         List<Message> sentMessages = messageDAO.getSentMessages(SessionManager.getCurrentUser().getId());
 
-        for (Message message : sentMessages) {
-            tableModel.addRow(new Object[]{
-            message.getRecipientEmail(),
-            message.getSubject(),
-            message.getTimestamp().toLocalDate()
+        UserDAO userDAO = new UserDAO();
+
+for (Message message : sentMessages) {
+
+    String receiverEmail = userDAO
+        .getUserById(message.getRecipientID())
+        .getEmail();
+
+    tableModel.addRow(new Object[]{
+        message.getId(),        // keep ID (hidden)
+        receiverEmail,          // show email
+        message.getSubject(),
+        message.getTimestamp().toLocalDate()
     });
 }
 
