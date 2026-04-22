@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 
 import org.w3c.dom.events.MouseEvent;
 
+import core.SessionManager;
 import dao.MessageDAO;
 import model.Message;
 
@@ -51,7 +52,7 @@ public class DraftPanel extends JPanel {
         
         //Retrieve draft messages from database and populate table
         MessageDAO messageDAO = new MessageDAO();
-        List<Message> draftMessages = messageDAO.getDraftMessages(1); // Replace with actual user ID
+        List<Message> draftMessages = messageDAO.getDraftMessages(SessionManager.getCurrentUser().getId();); // Replace with actual user ID
         for (Message message : draftMessages) {
             tableModel.addRow(new Object[]{
             message.getID(),

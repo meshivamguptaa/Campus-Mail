@@ -73,7 +73,7 @@ public class ComposeMailUI extends JPanel {
         sendBtn.addActionListener(e -> {
 
     try {
-        int senderId = 1; // for now
+        int senderId = SessionManager.getCurrentUser().getId(); // Get the sender's user ID from the session manager to associate the sent message with the currently logged-in user
         int receiverId = Integer.parseInt(toField.getText());
 
         String subject = subjectField.getText();

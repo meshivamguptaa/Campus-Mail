@@ -44,13 +44,14 @@ public Message getMessageById(int id) {
     try (Connection conn = DBConnection.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        stmt.setInt(1, id);
+        stmt.setInt(1, id);                    // Set the id parameter in the SQL statement to retrieve the specific message by its unique identifier
 
-        ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();          // Execute the SQL query to retrieve the message from the database based on the provided id
 
+        // If a message with the specified id is found in the database, create a Message object from the result set and return it; otherwise, return null to indicate that no message was found with the given id
         if (rs.next()) {
 
-            Message message = new Message(
+            Message message = new Message(             // Create a new Message object using the data retrieved from the database result set, including the message's id, senderId, recipientId, subject, body, status, and timestamp (converted to LocalDateTime)
                 rs.getInt("id"),
                 rs.getInt("sender_id"),
                 rs.getInt("recipient_id"), // or receiver_id (be consistent)

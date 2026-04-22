@@ -6,6 +6,9 @@ import java.awt.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+import core.SessionManager;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -51,7 +54,7 @@ public class InboxPanel extends JPanel {
         header.setBorder(BorderFactory.createEmptyBorder());
 
         MessageDAO messageDAO = new MessageDAO(); // Create instance of MessageDAO to retrieve messages
-        List<Message> inboxMessages = messageDAO.getInboxMessages(1); // Retrieve inbox messages for user with ID 1 (replace with actual user ID)
+        List<Message> inboxMessages = messageDAO.getInboxMessages(SessionManager.getCurrentUser().getId()); // Retrieve inbox messages for user with ID 1 (replace with actual user ID)
 
         for(Message message : inboxMessages) { // Loop through retrieved messages and add them to the table model
             tableModel.addRow(new Object[]{
