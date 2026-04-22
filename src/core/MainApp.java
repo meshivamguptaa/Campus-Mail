@@ -1,11 +1,11 @@
 package core;
-import ui.MainFrame;
+import ui.LoginUI;
 
 public class MainApp {
 
     public static void main(String[] args) {
 
-        new MainFrame();
+        new LoginUI();
 
     }
 
