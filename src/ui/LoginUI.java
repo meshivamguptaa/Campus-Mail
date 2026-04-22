@@ -6,61 +6,60 @@ import service.AuthService;
 import model.User;
 import core.SessionManager;
 
-public class LoginUI extends JFrame {
+public class LoginUI extends JPanel {
 
     private JTextField emailField;
     private JPasswordField passwordField;
     private JButton loginBtn, registerBtn;
+    private JPanel contentPanel;
 
-    public LoginUI() {
-        setTitle("Login");
-        setSize(350, 250);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public LoginUI(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
 
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setLayout(new GridLayout(4, 2, 10, 10));
 
-        panel.add(new JLabel("Email:"));
+        add(new JLabel("Email:"));
         emailField = new JTextField();
-        panel.add(emailField);
+        add(emailField);
 
-        panel.add(new JLabel("Password:"));
+        add(new JLabel("Password:"));
         passwordField = new JPasswordField();
-        panel.add(passwordField);
+        add(passwordField);
 
         loginBtn = new JButton("Login");
         registerBtn = new JButton("Register");
 
-        panel.add(loginBtn);
-        panel.add(registerBtn);
+        add(loginBtn);
+        add(registerBtn);
 
-        add(panel);
-
-        //  Login Action
+        // 🔥 Login
         loginBtn.addActionListener(e -> {
-            String email = emailField.getText();
-            String password = new String(passwordField.getPassword());
-
             AuthService service = new AuthService();
-            User user = service.login(email, password);
+
+            User user = service.login(
+                emailField.getText(),
+                new String(passwordField.getPassword())
+            );
 
             if (user != null) {
                 SessionManager.setCurrentUser(user);
 
-                new MainFrame(); // your dashboard entry
-                dispose(); // close login window
+                contentPanel.removeAll();
+                contentPanel.add(new DashboardUI(contentPanel), BorderLayout.CENTER);
+                contentPanel.revalidate();
+                contentPanel.repaint();
+
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid email or password");
+                JOptionPane.showMessageDialog(this, "Invalid credentials");
             }
         });
 
-        //  Go to Register
+        // Go to Register
         registerBtn.addActionListener(e -> {
-            new RegisterUI();
-            dispose();
+            contentPanel.removeAll();
+            contentPanel.add(new RegisterUI(contentPanel), BorderLayout.CENTER);
+            contentPanel.revalidate();
+            contentPanel.repaint();
         });
-
-        setVisible(true);
     }
 }

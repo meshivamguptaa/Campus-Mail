@@ -8,8 +8,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 
-import org.w3c.dom.events.MouseEvent;
-
 import core.SessionManager;
 
 import java.util.List;
@@ -53,11 +51,11 @@ public class SentPanel extends JPanel {
 
         // Retrieve sent messages from database and populate table
         MessageDAO messageDAO = new MessageDAO();
-        List<Message> sentMessages = messageDAO.getSentMessages(SessionManager.getCurrentUser().getId(););
+        List<Message> sentMessages = messageDAO.getSentMessages(SessionManager.getCurrentUser().getId());
 
         for (Message message : sentMessages) {
             tableModel.addRow(new Object[]{
-            message.getID(),
+            message.getId(),
             message.getRecipientID(),
             message.getSubject(),
             message.getTimestamp().toLocalDate()

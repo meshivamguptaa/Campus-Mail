@@ -1,10 +1,16 @@
 package ui;
 import javax.swing.*;
+
+import core.SessionManager;
+
 import java.awt.*;
 
 public class DashboardUI extends JPanel {
 
-    public DashboardUI() {
+    private JPanel contentPanel;
+
+    public DashboardUI(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
 
         setLayout(new BorderLayout()); // Use BorderLayout for main panel
 
@@ -122,6 +128,17 @@ public class DashboardUI extends JPanel {
         add(sidebar, BorderLayout.WEST);
         add(content, BorderLayout.CENTER);
         // Add inbox panel to content area
-        add(new TopBarPanel(), BorderLayout.NORTH); // Add top bar panel
+    
+        TopBarPanel topBar = new TopBarPanel(() -> {
+
+         SessionManager.setCurrentUser(null);
+
+         contentPanel.removeAll();
+        contentPanel.add(new LoginUI(contentPanel), BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+
+        });
+        add(topBar, BorderLayout.NORTH); // Add top bar panel
     }
 }

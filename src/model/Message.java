@@ -27,7 +27,7 @@ public class Message {
     }
 
     // Getter methods for message properties
-    public int getID() {
+    public int getId() {
         return id;                          // Return the ID of the message
     }
 

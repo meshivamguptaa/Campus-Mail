@@ -1,11 +1,20 @@
 package ui;
 
 import javax.swing.*;
+
+import core.SessionManager;
+import model.User;
+
 import java.awt.*;
 
 public class TopBarPanel extends JPanel {
 
-    public TopBarPanel() {
+
+    private JButton userBtn;    // Made userBtn a class member to access it in the action listener
+    private Runnable onLogout; // Callback to notify MainFrame about logout
+
+    public TopBarPanel(Runnable onLogout) {
+        this.onLogout = onLogout;
 
         setLayout(new BorderLayout(10,10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -26,10 +35,34 @@ public class TopBarPanel extends JPanel {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         JButton refreshBtn = new JButton("Refresh");
-        JButton profileBtn = new JButton("User");
+        userBtn = new JButton("User");
+        userBtn.addActionListener(e -> {
+            User user = SessionManager.getCurrentUser();
+
+            JPopupMenu menu = new JPopupMenu();
+
+            // Show current user
+            JMenuItem userInfo = new JMenuItem("Logged in as: " + user.getEmailId());
+            userInfo.setEnabled(false);
+
+            // Logout option
+            JMenuItem logoutItem = new JMenuItem("Logout");
+
+            logoutItem.addActionListener(ev -> {
+                if (onLogout != null) {
+                    onLogout.run(); // 🔥 THIS triggers Dashboard logic
+                }
+            });
+
+            menu.add(userInfo);
+            menu.addSeparator();
+            menu.add(logoutItem);
+
+            menu.show(userBtn, 0, userBtn.getHeight());
+        });
 
         rightPanel.add(refreshBtn);
-        rightPanel.add(profileBtn);
+        rightPanel.add(userBtn);
 
         add(searchField, BorderLayout.CENTER);
         add(rightPanel, BorderLayout.EAST);

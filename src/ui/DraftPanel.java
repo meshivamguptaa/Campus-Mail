@@ -11,8 +11,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
-import org.w3c.dom.events.MouseEvent;
-
 import core.SessionManager;
 import dao.MessageDAO;
 import model.Message;
@@ -52,10 +50,10 @@ public class DraftPanel extends JPanel {
         
         //Retrieve draft messages from database and populate table
         MessageDAO messageDAO = new MessageDAO();
-        List<Message> draftMessages = messageDAO.getDraftMessages(SessionManager.getCurrentUser().getId();); // Replace with actual user ID
+        List<Message> draftMessages = messageDAO.getDraftMessages(SessionManager.getCurrentUser().getId()); // Replace with actual user ID
         for (Message message : draftMessages) {
             tableModel.addRow(new Object[]{
-            message.getID(),
+            message.getId(),
             message.getRecipientID(),
             message.getSubject(),
             message.getTimestamp().toLocalDate()

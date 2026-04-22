@@ -58,7 +58,7 @@ public class InboxPanel extends JPanel {
 
         for(Message message : inboxMessages) { // Loop through retrieved messages and add them to the table model
             tableModel.addRow(new Object[]{
-                message.getID(), 
+                message.getId(), 
                 message.getSenderID(), // Placeholder for sender name, replace with actual sender name retrieval
                 message.getSubject(),
                 message.getTimestamp().toLocalDate() // Format timestamp to show only date

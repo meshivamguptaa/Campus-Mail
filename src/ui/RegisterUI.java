@@ -1,75 +1,82 @@
 package ui;
 
 import javax.swing.*;
+
+import core.SessionManager;
+import model.User;
+
 import java.awt.*;
 import service.AuthService;
-import model.User;
-import core.SessionManager;
 
-public class RegisterUI extends JFrame {
+public class RegisterUI extends JPanel {
 
     private JTextField nameField, emailField;
     private JPasswordField passwordField;
     private JButton registerBtn, backBtn;
+    private JPanel contentPanel;
 
-    public RegisterUI() {
-        setTitle("Register");
-        setSize(350, 300);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public RegisterUI(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
 
-        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setLayout(new GridLayout(5, 2, 10, 10));
 
-        panel.add(new JLabel("Name:"));
+        add(new JLabel("Name:"));
         nameField = new JTextField();
-        panel.add(nameField);
+        add(nameField);
 
-        panel.add(new JLabel("Email:"));
+        add(new JLabel("Email:"));
         emailField = new JTextField();
-        panel.add(emailField);
+        add(emailField);
 
-        panel.add(new JLabel("Password:"));
+        add(new JLabel("Password:"));
         passwordField = new JPasswordField();
-        panel.add(passwordField);
+        add(passwordField);
 
         registerBtn = new JButton("Register");
-        backBtn = new JButton("Back to Login");
+        backBtn = new JButton("Back");
 
-        panel.add(registerBtn);
-        panel.add(backBtn);
+        add(registerBtn);
+        add(backBtn);
 
-        add(panel);
-
-        // Register Action
         registerBtn.addActionListener(e -> {
-            String name = nameField.getText();
-            String email = emailField.getText();
-            String password = new String(passwordField.getPassword());
-
             AuthService service = new AuthService();
-            boolean success = service.register(name, email, password);
+
+            boolean success = service.register(
+                nameField.getText(),
+                emailField.getText(),
+                new String(passwordField.getPassword())
+            );
 
             if (success) {
-                JOptionPane.showMessageDialog(this, "Registered Successfully!");
+                JOptionPane.showMessageDialog(this, "Registered!");
 
-                //  Auto-login after registration
-                User user = service.login(email, password);
+                
+                String email = emailField.getText();
+                String password = new String(passwordField.getPassword());
+
+        
+
+                User user = service.login(email, password); // Auto-login after registration
                 SessionManager.setCurrentUser(user);
 
-                new MainFrame();
-                dispose();
+                contentPanel.removeAll();
+                contentPanel.add(new DashboardUI(contentPanel));
+                contentPanel.revalidate();
+                contentPanel.repaint();
+
             } else {
-                JOptionPane.showMessageDialog(this, "Email already exists");
+                JOptionPane.showMessageDialog(this, "Email exists");
             }
+
+            contentPanel.revalidate();
+            contentPanel.repaint();
         });
 
-        // Back to Login
         backBtn.addActionListener(e -> {
-            new LoginUI();
-            dispose();
+            contentPanel.removeAll();
+            contentPanel.add(new LoginUI(contentPanel), BorderLayout.CENTER);
+            contentPanel.revalidate();
+            contentPanel.repaint();
         });
-
-        setVisible(true);
     }
 }

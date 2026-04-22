@@ -7,6 +7,7 @@ import service.MessageService;
 import java.awt.*;
 import java.io.File;
 import java.time.LocalDateTime;  
+import core.SessionManager;
     
 
 public class ComposeMailUI extends JPanel {
